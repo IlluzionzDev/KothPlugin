@@ -1,0 +1,3 @@
+name: Koth
+version: ${project.version}
+main: me.jamin.koth.KothPlugin
