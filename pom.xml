@@ -15,6 +15,8 @@
 
     <packaging>jar</packaging>
     <build>
+        <finalName>Koth-${project.version}</finalName>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

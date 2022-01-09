@@ -1,3 +1,4 @@
 name: Koth
 version: ${project.version}
 main: me.jamin.koth.KothPlugin
+api-version: "1.13"
