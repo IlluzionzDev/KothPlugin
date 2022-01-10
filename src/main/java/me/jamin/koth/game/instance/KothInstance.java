@@ -169,38 +169,41 @@ public class KothInstance implements GameInstance {
         if (startTime.isReady() && gameTime.isReady()) {
             this.state = GameState.ENDED;
             endGame();
+            return;
         }
 
-        // Action based on state
-        if (state == GameState.STARTING) {
-            // Start phase over
-            if (startTime.isReady() && !gameTime.isReady()) {
-                getPlayers().forEach(player -> {
-                    new MistString("&4&lKOTH &cLet the games begin!").sendMessage(player.getPlayer());
+        // Attempt this logic every second
+        if (MinecraftScheduler.get().hasElapsed(20)) {
+            // Action based on state
+            if (state == GameState.STARTING) {
+                // Start phase over
+                if (startTime.isReady() && !gameTime.isReady()) {
+                    getPlayers().forEach(player -> {
+                        new MistString("&4&lKOTH &cLet the games begin!").sendMessage(player.getPlayer());
 
-                    // Spawn at team spawnpoint
-                    Location spawnPoint = arena.spawnLocations.get(player.getTeam());
-                    player.getPlayer().teleport(spawnPoint);
+                        // Spawn at team spawnpoint
+                        Location spawnPoint = arena.spawnLocations.get(player.getTeam());
+                        player.getPlayer().teleport(spawnPoint);
 
-                    // Make sure doesn't have selection gui open
-                    player.getPlayer().closeInventory();
+                        // Make sure doesn't have selection gui open
+                        player.getPlayer().closeInventory();
 
-                    // Spawn with kit
-                    player.getSelectedKit().applyKit(player);
-                });
+                        // Spawn with kit
+                        player.getSelectedKit().applyKit(player);
+                    });
 
-                state = GameState.RUNNING;
-            }
+                    state = GameState.RUNNING;
+                    return;
+                }
 
-            // Kit selection logic
-            if (MinecraftScheduler.get().hasElapsed(20) && startTime.getTickLeft() <= 10 * 20) {
-                getPlayers().forEach(player -> {
-                    new MistString("&4&lKOTH &cGame starting in " + startTime.getFormattedTimeLeft(false)).sendMessage(player.getPlayer());
-                    XSound.BLOCK_STONE_BUTTON_CLICK_ON.play(player.getPlayer());
-                });
-            }
-        } else if (state == GameState.RUNNING) {
-            if (MinecraftScheduler.get().hasElapsed(20)) {
+                // Kit selection logic
+                if (startTime.getTickLeft() <= 10 * 20) {
+                    getPlayers().forEach(player -> {
+                        new MistString("&4&lKOTH &cGame starting in " + startTime.getFormattedTimeLeft(false)).sendMessage(player.getPlayer());
+                        XSound.BLOCK_STONE_BUTTON_CLICK_ON.play(player.getPlayer());
+                    });
+                }
+            } else if (state == GameState.RUNNING) {
                 // Capture logic
                 getPlayers().forEach(player -> {
                     if (arena.getCaptureRegion().inRegion(player.getPlayer().getLocation())) {

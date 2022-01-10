@@ -19,6 +19,6 @@ public class GameSettings {
      * Time that the game is in the starting state before
      * it actually begins (ticks)
      */
-    public int GAME_START_TIME = 60 * 20;
+    public int GAME_START_TIME = 30 * 20;
 
 }

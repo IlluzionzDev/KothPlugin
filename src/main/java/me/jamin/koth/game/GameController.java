@@ -28,6 +28,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 
 import java.util.*;
@@ -125,6 +126,17 @@ public enum GameController implements PluginController {
     public void onFoodChange(final FoodLevelChangeEvent event) {
         event.setFoodLevel(20);
         event.setCancelled(true);
+    }
+
+    /**
+     * Handle edge case where player leaves, so just kick them from game
+     */
+    @EventHandler
+    public void onPlayerQuit(final PlayerQuitEvent event) {
+        GamePlayer player = getPlayer(event.getPlayer().getUniqueId());
+        if (player == null) return;
+
+        gamePlayers.remove(player.getGame().getUuid(), player);
     }
 
     @EventHandler
